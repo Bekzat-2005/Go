@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"math"
 )
@@ -8,28 +9,28 @@ import (
 const IMTPower = 2
 
 func main() {
-	for i := 0; i < 10; i++ {
-		fmt.Printf("%d\n", i)
+	// for i := 0; i < 10; i++ {
+	// 	if i == 5 {
+	// 		continue
+	// 	}
+	// 	fmt.Printf("%d\n", i)
+	// }
+
+	fmt.Println("VES: ")
+	for {
+		userHeight, userKg := getUserInput()
+		IMT, error := calculateIMT(userKg, userHeight)
+		if error != nil {
+			fmt.Println(error)
+			continue
+		}
+		// isLean := IMT < 16
+		outputResult(IMT)
+		repeat := userRepeatCalculation()
+		if !repeat {
+			break
+		}
 	}
-
-	userHeight, userKg := getUserInput()
-	IMT := calculateIMT(userKg, userHeight)
-	// isLean := IMT < 16
-	outputResult(IMT)
-
-	switch {
-	case IMT < 16:
-		fmt.Println("У вас сильный дефицит массы тела")
-	case IMT < 18.5:
-		fmt.Println("У вас  дефицит массы тела")
-	case IMT < 25:
-		fmt.Println("У вас нормальный массы тела")
-	case IMT < 30:
-		fmt.Println("У вас избыточный массы тела")
-	default:
-		fmt.Println("У вас степень ожирения массы тела")
-	}
-
 	// if IMT < 16 {
 	// 	fmt.Println("У вас сильный дефицит массы тела")
 	// } else if IMT < 18.5 {
@@ -47,11 +48,27 @@ func main() {
 func outputResult(imt float64) {
 	result := fmt.Sprintf("Ваш индек масса тела %.1f", imt)
 	fmt.Println(result)
-}
-func calculateIMT(userKg float64, userHeight float64) float64 {
 
+	switch {
+	case imt < 16:
+		fmt.Println("У вас сильный дефицит массы тела")
+	case imt < 18.5:
+		fmt.Println("У вас  дефицит массы тела")
+	case imt < 25:
+		fmt.Println("У вас нормальный массы тела")
+	case imt < 30:
+		fmt.Println("У вас избыточный массы тела")
+	default:
+		fmt.Println("У вас степень ожирения массы тела")
+	}
+
+}
+func calculateIMT(userKg float64, userHeight float64) (float64, error) {
+	if userKg <= 0 || userHeight <= 0 {
+		return 0, errors.New("qwe")
+	}
 	var IMT = userKg / math.Pow(userHeight/100, IMTPower)
-	return IMT
+	return IMT, nil
 }
 func getUserInput() (float64, float64) {
 	var userHeight float64
@@ -61,4 +78,14 @@ func getUserInput() (float64, float64) {
 	fmt.Print("Вес: ")
 	fmt.Scan(&userKg)
 	return userHeight, userKg
+}
+func userRepeatCalculation() bool {
+	fmt.Print("VI hotite eshe raz (y/n)?")
+	var userCheck string
+	fmt.Scan(&userCheck)
+
+	if userCheck == "y" || userCheck == "Y" {
+		return true
+	}
+	return false
 }
