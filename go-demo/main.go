@@ -21,7 +21,7 @@ func main() {
 		userHeight, userKg := getUserInput()
 		IMT, error := calculateIMT(userKg, userHeight)
 		if error != nil {
-			fmt.Println(error)
+			fmt.Println("error")
 			continue
 		}
 		// isLean := IMT < 16
